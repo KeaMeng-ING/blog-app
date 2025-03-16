@@ -27,6 +27,7 @@ app.post("/signup", (req, res) => {
 });
 
 app.get("/me", authMiddleware, (req, res) => {
+  console.log(object);
   res.json({ user: req.user });
 });
 
