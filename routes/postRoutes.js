@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const postController = require("../controllers/postController");
-const jwt = require("jsonwebtoken");
 const verifyToken = require("../middleware/verifyToken");
 
 app.post("/", verifyToken, postController.createPost);

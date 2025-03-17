@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 });
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
-// app.use("/api/comments", commentRoutes);
+app.use("/api/comments", commentRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port https://localhost:${port}`);
