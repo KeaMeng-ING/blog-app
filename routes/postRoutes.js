@@ -1,19 +1,12 @@
-const jwt = require("jsonwebtoken");
 const express = require("express");
 const app = express();
+const postController = require("../controllers/postController");
 
-app.post("/posts", verifyToken, (req, res) => {
-  jwt.verify(req.token, "secretKey", (err, authData) => {
-    if (err) {
-      res.sendStatus(403);
-    } else {
-      res.json({
-        message: "Post created...",
-        authData,
-      });
-    }
-  });
-});
+app.post("/", verifyToken, postController.createPost);
+app.post("/edit/:id", verifyToken, postController.editPost);
+app.post("/delete/:id", verifyToken, postController.deletePost);
+
+module.exports = app;
 
 // FORMAT OF TOKEN
 // Authorization: Bearer <access_token>
@@ -35,5 +28,3 @@ function verifyToken(req, res, next) {
     res.sendStatus(403);
   }
 }
-
-module.exports = app;

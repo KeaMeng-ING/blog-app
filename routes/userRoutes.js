@@ -1,34 +1,13 @@
-const jwt = require("jsonwebtoken");
+// routes/userRoutes.js
+
 const express = require("express");
 const app = express();
 const authMiddleware = require("../middleware/auth");
+const userController = require("../controllers/userController");
 
-app.post("/login", (req, res) => {
-  // Mock user
-  const user = {
-    id: 1,
-    username: "brad",
-    email: "brad@gmail.com",
-  };
-
-  jwt.sign({ user }, "secretKey", (err, token) => {
-    res.json({
-      token,
-    });
-  });
-});
-
-app.post("/signup", (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
-  console.log(firstName);
-  res.json({
-    message: "Signup successful",
-  });
-});
-
+app.post("/login", userController.logIn);
+app.post("/signup", userController.signUp);
 app.get("/me", authMiddleware, (req, res) => {
-  console.log(object);
-  console.log(object);
   res.json({ user: req.user });
 });
 
