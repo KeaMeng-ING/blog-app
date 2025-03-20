@@ -4,7 +4,16 @@ const prisma = new PrismaClient();
 const postController = {
   async createPost(req, res) {
     try {
-      const { title, content } = req.body;
+      const {
+        title,
+        content,
+        imageUrl,
+        imageAlt,
+        excerpt,
+        subtitle,
+        categoryId,
+        readTime,
+      } = req.body;
       if (!title || !content) {
         return res.status(400).json({
           message: "Title and content are required",
@@ -16,6 +25,12 @@ const postController = {
           content,
           authorId: req.authData.id,
           isPublished: true,
+          imageUrl, // We should have default
+          imageAlt,
+          excerpt,
+          subtitle,
+          categoryId,
+          readTime,
         },
         include: {
           author: {
@@ -106,6 +121,65 @@ const postController = {
 
       res.json({
         message: "working",
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Server error" });
+    }
+  },
+
+  async getAllPosts(req, res) {
+    try {
+      const posts = await prisma.post.findMany({
+        where: {
+          isPublished: true,
+        },
+        include: {
+          author: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      });
+
+      // console.log(posts);
+
+      const formattedPosts = posts.map((post) => ({
+        ...post,
+        authorName: post.author
+          ? `${post.author.firstName} ${post.author.lastName}`.trim()
+          : "Unknown",
+        author: undefined, // Remove the original author object
+      }));
+
+      console.log(formattedPosts);
+
+      res.json({ posts: formattedPosts });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Server error" });
+    }
+  },
+
+  async createCategory(req, res) {
+    try {
+      const { name } = req.body;
+      if (!name) {
+        return res.status(400).json({
+          message: "Name is required",
+        });
+      }
+      const newCategory = await prisma.category.create({
+        data: {
+          name,
+        },
+      });
+
+      res.json({
+        message: "Category created",
+        category: newCategory,
       });
     } catch (err) {
       console.log(err);
