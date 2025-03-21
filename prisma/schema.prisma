@@ -36,7 +36,7 @@ model Post {
   updatedAt   DateTime  @updatedAt
   Comment     Comment[]
   isFeatured  Boolean   @default(false)
-  imageUrl    String?
+  imageUrl    String?   @default("https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg")
   imageAlt    String?
   subtitle    String?
   excerpt     String?

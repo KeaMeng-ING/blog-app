@@ -13,6 +13,8 @@ const postController = {
         subtitle,
         categoryId,
         readTime,
+        isFeatured,
+        isPublished,
       } = req.body;
       if (!title || !content) {
         return res.status(400).json({
@@ -31,6 +33,8 @@ const postController = {
           subtitle,
           categoryId,
           readTime,
+          isFeatured,
+          isPublished,
         },
         include: {
           author: {
@@ -46,6 +50,8 @@ const postController = {
         message: "Post created",
         post: newPost,
       });
+
+      console.log(newPost);
     } catch (err) {
       console.log(err);
       res.status(500).json({ message: "Server error" });
@@ -141,6 +147,11 @@ const postController = {
               lastName: true,
             },
           },
+          category: {
+            select: {
+              name: true,
+            },
+          },
         },
       });
 
@@ -151,10 +162,12 @@ const postController = {
         authorName: post.author
           ? `${post.author.firstName} ${post.author.lastName}`.trim()
           : "Unknown",
+        categoryName: post.category ? post.category.name : "Uncategorized", // Add category name
         author: undefined, // Remove the original author object
+        category: undefined, // Remove the original category object
       }));
 
-      console.log(formattedPosts);
+      // console.log(formattedPosts);
 
       res.json({ posts: formattedPosts });
     } catch (err) {
